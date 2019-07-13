@@ -37,11 +37,14 @@ body {
   width: 30%;  
 }
 
-.todos {
-  width: 95%;
+.project-wrapper {
   display: flex;
   flex-direction: column;
-  margin: auto;
+  align-content: center;
+}
+
+.project-wrapper .new-project input {
+  display: block;
 }
 
 .project {
@@ -52,10 +55,28 @@ body {
   border-radius: 5px;
   padding: .6rem;
   font-size: 1.4rem;
+  background: #ccc;
   background: rgba(0,0,0,.1);
 }
+
 .project:hover {
   background: rgba(0,0,0,.15);
+}
+
+input.project {
+  background: #eee;
+}
+
+input.project:hover,
+input.project:focus {
+  background: #fff;
+}
+
+.todos {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }
 
 .todo {

@@ -9,6 +9,7 @@ class UI {
     this.currentProject = null;
 
     this.todoForm = document.querySelector(".new-todo");
+    this.todoTitleInput = document.querySelector("#todo-title");
     this.todoFormDetails = document.querySelector(".new-todo-details");
 
     // Expand the form when focused on it
@@ -19,6 +20,12 @@ class UI {
     this.todoForm.addEventListener("submit", e => {
       this.todoFormDetails.style.display = "none";
       this.handleTodoFormSubmit(e);
+    });
+
+    this.projectForm = document.querySelector('.new-project');
+    
+    this.projectForm.addEventListener("submit", e => {
+      this.handleProjectFormSubmit(e);
     });
 
     this.handleProjectClick = this.handleProjectClick.bind(this);
@@ -47,13 +54,13 @@ class UI {
   /* Click handlers */
 
   handleProjectClick(project) {
-    if (project.todoCount > 0) {
-      // Clear the previously rendered todos
-      this.todos.innerHTML = "";
-      this.currentProject = project;
-      this.contentTitle.textContent = this.currentProject.title;
-      project.todos.forEach(todo => this.render(todo));
-    }
+    // Focus on todo form if project has no todos
+    if(project.todoCount === 0) this.todoTitleInput.focus();
+    // Clear the previously rendered todos
+    this.todos.innerHTML = "";
+    this.currentProject = project;
+    this.contentTitle.textContent = this.currentProject.title;
+    project.todos.forEach(todo => this.render(todo));
   }
 
   handleTodoClick(todo) {
@@ -75,6 +82,16 @@ class UI {
     this.render(
       this.currentProject.todos[this.currentProject.todos.length - 1]
     );
+  }
+
+  handleProjectFormSubmit(e) {
+    e.preventDefault();
+    const projectForm = e.target;
+    const projectTitle = projectForm.querySelector('#project-title').value;
+    this.projectForm.reset();
+    const project = this.createProject(projectTitle);
+    // Mock project click to render project page
+    this.handleProjectClick(project);
   }
 
   // Renders the given item
