@@ -1,45 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>JC Todo List</title>
-</head>
-<body>
-  <div class="container">
-    <div class="sidebar">
-      <h1>
-        Projects
-      </h1>
-      <div class="projects">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JC Todo List</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h1>
+          Projects
+        </h1>
+        <div class="projects"></div>
+        <button class="btn btn-new">New Project</button>
       </div>
-      <button class="btn btn-new">New Project</button>
-    </div>
-    <div class="content">
-      <h1 id="content-title">Todos</h1>
-      <form class="new-todo">
-        <input type="text" placeholder="Add a new to-do item..." name="todo-title" id="todo-title" required minlength="3" maxlength="30">
-        <span class="new-todo-details" style="display:none">
-          <label for="todo-description">
-            Description
-          </label>
-        <input type="text" placeholder="Briefly describe the task..." name="todo-description" id="todo-description" require minlength="3" maxlength="50">
-          <label for="todo-due">
-            Due Date
-          </label>
-          <input type="datetime-local" name="todo-due" id="todo-due">
-          <label for="todo-important">
-            IMPORTANT
-            <input type="checkbox" value="IMPORTANT" name="todo-important" id="todo-important">
-          </label>
-          <button class="btn-new">Add New Todo</button>
-        </span>
-      </form>
-      <div class="todos">
+      <div class="content">
+        <h1 id="content-title">Todos</h1>
+        <form class="new-todo">
+          <input
+            type="text"
+            placeholder="Add a new to-do item..."
+            name="todo-title"
+            id="todo-title"
+            required
+            minlength="3"
+            maxlength="30"
+          />
+          <span class="new-todo-details" style="display:none">
+            <label for="todo-description">
+              Description
+            </label>
+            <input
+              type="text"
+              placeholder="Briefly describe the task..."
+              name="todo-description"
+              id="todo-description"
+              require
+              minlength="3"
+              maxlength="50"
+            />
+            <label for="todo-due">
+              Due Date
+            </label>
+            <input type="datetime-local" name="todo-due" id="todo-due" />
+            <label for="todo-important">
+              IMPORTANT
+              <input
+                type="checkbox"
+                value="IMPORTANT"
+                name="todo-important"
+                id="todo-important"
+              />
+            </label>
+            <button class="btn-new">Add New Todo</button>
+          </span>
+        </form>
+        <div class="todos"></div>
       </div>
     </div>
-  </div>
-  <script src="bundle.js"></script>
-</body>
+    <script src="bundle.js"></script>
+  </body>
 </html>
