@@ -1,17 +1,19 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   font-family: Arial;
   background: #f5f5f5;
 }
-* {
-  box-sizing: border-box;
-}
+
 .container {
   width: 100%;
 
 }
-.sidebar, .todos {
+.sidebar, .content {
   display: inline-block;
   vertical-align: top;
   background: #ddd;
