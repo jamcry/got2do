@@ -38,24 +38,32 @@ class UI {
   }
 
   checkLocalStorage() {
-    if(localStorage.getItem('projectData')) {
-      const projectData = JSON.parse(localStorage.getItem('projectData'));
-      console.log(projectData);
-      projectData.forEach(projectObject => {
-        let currentProject = new Project(projectObject.title);
-        this.render(currentProject);
-        // Add todos to new project if any
-        if (projectObject.todoCount > 0) {
-          projectObject.todos.forEach(todoObject => {
-            let {title, description, dueDate, priority} = todoObject;
-            currentProject.newTodo(title, description, dueDate, priority);
-          })
-        }
-        this.projectData.push(currentProject);
-      })
-    }
+    const projectData = this.fetchFromLocalStorage('projectData');
+    if(projectData) this.deserializeProjectData(projectData);
   }
 
+  // Tetch and parse the localStorage item with given key, returns false otherwise
+  fetchFromLocalStorage(key) {
+    const data = localStorage.getItem(key);
+    if(data) return (JSON.parse(data));
+    else return false;
+  }
+
+  deserializeProjectData(projectData) {
+    projectData.forEach(projectObject => {
+      let currentProject = new Project(projectObject.title);
+      this.render(currentProject);
+      // Add todos to new project if any
+      if (projectObject.todoCount > 0) {
+        projectObject.todos.forEach(todoObject => {
+          let {title, description, dueDate, priority} = todoObject;
+          currentProject.newTodo(title, description, dueDate, priority);
+        })
+      }
+      this.projectData.push(currentProject);
+    })
+  }
+  
   // Creates and renders a new Project
   createProject(title) {
     const project = new Project(title);
@@ -148,24 +156,6 @@ class UI {
     if (project.todoCount > 0) {
       project.todos.forEach(todo => this.render(todo));
     }
-  }
-
-
-  renderProjectData(projectData) {
-    console.log("rendering")
-    projectData.forEach(project => {
-      
-      /* UNSERIALIZE PROJECT AND TODOS */
-      const newProject = new Project(project.title);
-      project.todos.forEach(todo => {
-        const {title, description, dueDate, priority} = todo;
-        newProject.newTodo(title, description, dueDate, priority);
-        console.log(newProject.todos[newProject.todos.length -1 ])
-      })
-
-      this.render(newProject);
-      this.renderProject(newProject);
-    });
   }
 
 }
