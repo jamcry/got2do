@@ -31,18 +31,59 @@ class UI {
     this.handleProjectClick = this.handleProjectClick.bind(this);
     this.handleTodoClick = this.handleTodoClick.bind(this);
     this.handleTodoFormSubmit = this.handleTodoFormSubmit.bind(this);
+
+    this.projectData = [];
+    this.checkLocalStorage();
+
+  }
+
+  checkLocalStorage() {
+    if(localStorage.getItem('projectData')) {
+      const projectData = JSON.parse(localStorage.getItem('projectData'));
+      console.log(projectData);
+      projectData.forEach(projectObject => {
+        let currentProject = new Project(projectObject.title);
+        this.render(currentProject);
+        // Add todos to new project if any
+        if (projectObject.todoCount > 0) {
+          projectObject.todos.forEach(todoObject => {
+            let {title, description, dueDate, priority} = todoObject;
+            currentProject.newTodo(title, description, dueDate, priority);
+          })
+        }
+        this.projectData.push(currentProject);
+      })
+    }
   }
 
   // Creates and renders a new Project
   createProject(title) {
     const project = new Project(title);
+
+    // Push new project to projectData list and update localstorage
+    this.projectData.push(project);
+    localStorage.setItem('projectData', JSON.stringify(this.projectData));
+
     this.render(project);
     return project;
   }
 
   // Creates and renders a new Todo
+  //!! SHOULDN'T BE USED! USE (Project).newTodo instead!
   createTodo(title, description, dueDate, priority) {
-    const todo = new Todo(title, description, dueDate, priority);
+
+    // Find current project's index in the list
+    let currentProjectIndex = this.projectData.indexOf(this.currentProject);
+    // Add new todo to current project object
+    let todo = this.currentProject.newTodo(title, description, dueDate, priority);
+    // Copy the previous projectData
+    let projectDataNew = [...this.projectData];
+    // Update prev state of currentProject with new one
+    projectDataNew[currentProjectIndex] = this.currentProject;
+    // Update localStorage
+    localStorage.setItem('projectData', JSON.stringify(this.projectData));
+
+
     this.render(todo);
     return todo;
   }
@@ -77,11 +118,8 @@ class UI {
     const todoImportant = todoForm.querySelector("#todo-important").checked;
     const todoPriority = todoImportant ? "HIGH" : "NORMAL";
     this.todoForm.reset();
-    this.currentProject.newTodo(todoTitle, todoDesc, todoDue, todoPriority);
-    // Render the new (last) item
-    this.render(
-      this.currentProject.todos[this.currentProject.todos.length - 1]
-    );
+    this.createTodo(todoTitle, todoDesc, todoDue, todoPriority);
+
   }
 
   handleProjectFormSubmit(e) {
@@ -111,6 +149,25 @@ class UI {
       project.todos.forEach(todo => this.render(todo));
     }
   }
+
+
+  renderProjectData(projectData) {
+    console.log("rendering")
+    projectData.forEach(project => {
+      
+      /* UNSERIALIZE PROJECT AND TODOS */
+      const newProject = new Project(project.title);
+      project.todos.forEach(todo => {
+        const {title, description, dueDate, priority} = todo;
+        newProject.newTodo(title, description, dueDate, priority);
+        console.log(newProject.todos[newProject.todos.length -1 ])
+      })
+
+      this.render(newProject);
+      this.renderProject(newProject);
+    });
+  }
+
 }
 
 export default UI;

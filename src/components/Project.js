@@ -27,6 +27,7 @@ class Project {
     const todo = new Todo(title, description, dueDate, priority);
     this.todos.push(todo);
     this.todoCount += 1;
+    return todo;
   }
 }
 
