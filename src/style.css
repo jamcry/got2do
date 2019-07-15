@@ -69,6 +69,7 @@ h1 {
 input.project:focus {
   background: #bbb;
   cursor: pointer;
+  border-left: solid gray;
   border-left-width: 5px;
   transition: border 0.3s linear;
 }
@@ -83,7 +84,6 @@ input.project {
   border: none;
   border-top: 1px solid #777;
   border-bottom: 1px solid #555;
-  border-left: 3px solid gray;
 }
 
 input.project:hover,
