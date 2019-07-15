@@ -14,6 +14,8 @@ class Project {
     project.classList.add('project');
     project.textContent = this.title;
 
+    this.projectEl = project;
+
     // Add event listeners if clickCallback function is given
     if(clickCallback) {
       project.addEventListener('click', () => clickCallback(this));

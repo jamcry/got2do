@@ -7,6 +7,7 @@ class UI {
     this.todos = document.querySelector(".todos");
     this.contentTitle = document.querySelector("#content-title");
     this.currentProject = null;
+    this.currentProjectEl = {};
 
     this.todoForm = document.querySelector(".new-todo");
     this.todoTitleInput = document.querySelector("#todo-title");
@@ -103,14 +104,20 @@ class UI {
 
   /* Click handlers */
 
-  handleProjectClick(project) {
+  handleProjectClick(projectObj) {
     // Focus on todo form if project has no todos
-    if(project.todoCount === 0) this.todoTitleInput.focus();
+    if(projectObj.todoCount === 0) this.todoTitleInput.focus();
     // Clear the previously rendered todos
     this.todos.innerHTML = "";
-    this.currentProject = project;
+    this.currentProject = projectObj;
+    // Remove project-current class from previous selected project
+    if(this.currentProjectEl.classList) this.currentProjectEl.classList.remove('project-current');
+    // Set current project
+    this.currentProjectEl = projectObj.projectEl;
+    // Add project-current class to current project element
+    this.currentProjectEl.classList.add('project-current');
     this.contentTitle.textContent = this.currentProject.title;
-    project.todos.forEach(todo => this.render(todo));
+    projectObj.todos.forEach(todo => this.render(todo));
   }
 
   handleTodoDelete(todo) {

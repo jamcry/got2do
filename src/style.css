@@ -26,6 +26,7 @@ h1 {
 }
 .content {
   flex-grow: 9999;
+  padding: .7rem;
 }
 .sidebar, .content {
   box-sizing: border-box;
@@ -33,7 +34,6 @@ h1 {
   background: #ddd;
   border: 1px solid #888;
   border-radius: 5px;
-  padding: .7rem;
   margin: 5px;
 }
 
@@ -52,19 +52,25 @@ h1 {
 }
 
 .project {
-  width: 75%;
   margin: auto;
-  margin-bottom: .5rem;
-  border: .5px solid black;
-  border-radius: 5px;
   padding: .6rem;
   font-size: 1.4rem;
+  border-bottom: 1px solid #999;
   background: #ccc;
-  background: rgba(0,0,0,.1);
+  border-left: 0px solid gray;
+  transition: border-left-width .3s linear;
+  border-left-width: 0px;
+}
+.project-current {
+  border-left: 5px solid gray;
 }
 
-.project:hover {
-  background: rgba(0,0,0,.15);
+.project:hover,
+input.project:focus {
+  background: #bbb;
+  cursor: pointer;
+  border-left-width: 5px;
+  transition: border 0.3s linear;
 }
 
 input {
@@ -73,6 +79,11 @@ input {
 
 input.project {
   background: #eee;
+  width: 100%;
+  border: none;
+  border-top: 1px solid #777;
+  border-bottom: 1px solid #555;
+  border-left: 3px solid gray;
 }
 
 input.project:hover,
@@ -90,10 +101,14 @@ input.project:focus {
 .todo {
   margin-bottom: 5px;
   padding-left: 25px;
+  padding-bottom: 15px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-bottom: 1px solid gray;
   font-family: 'Roboto', sans-serif;
+}
+.todo p {
+  padding-left: 10px;
 }
 .todo-checked {
   color: #888;
@@ -104,10 +119,12 @@ input.project:focus {
 .todo h1 {
   display: flex;
   font-family: 'Nunito', sans-serif;
+  font-size: 1.7rem;
 }
 .todo h1 input[type="checkbox"] {
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.7rem;
+  margin-right: .5rem;
 }
 .todo:hover {
   background: rgba(0,0,0,.05);  
