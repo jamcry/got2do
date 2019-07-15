@@ -5,8 +5,12 @@
 body {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
-  font-family: Arial;
+  font-family: 'Nunito', 'Roboto', 'Arial', sans-serif;
   background: #f5f5f5;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .container {
@@ -63,6 +67,10 @@ body {
   background: rgba(0,0,0,.15);
 }
 
+input {
+  font-family: 'Nunito', 'Roboto';
+}
+
 input.project {
   background: #eee;
 }
@@ -85,12 +93,37 @@ input.project:focus {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
 }
-
+.todo-checked {
+  color: #888;
+}
+.todo-checked h1 {
+  text-decoration: line-through;
+}
+.todo h1 {
+  display: flex;
+  font-family: 'Nunito', sans-serif;
+}
+.todo h1 input[type="checkbox"] {
+  width: 2rem;
+  height: 2rem;
+}
 .todo:hover {
   background: rgba(0,0,0,.05);  
 }
-
+.action {
+  border: 1px solid #333;
+  border-radius: 7px;
+  background: #444;
+  color: #eee;
+  width: 75px;
+  height: 25px;
+}
+.action:hover {
+  font-weight: bold;
+  background: #666;
+}
 .new-todo {
   border-bottom: 1px dotted #aaa;
 }
@@ -126,3 +159,4 @@ input.project:focus {
   text-decoration: underline;
   color: #000;
 }
+

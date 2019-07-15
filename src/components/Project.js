@@ -23,11 +23,17 @@ class Project {
   }
 
   // Creates a new Todo object and adds it to project's todo list
-  newTodo(title, description, dueDate, priority) {
-    const todo = new Todo(title, description, dueDate, priority);
+  newTodo(title, description, dueDate, priority, done) {
+    const todo = new Todo(title, description, dueDate, priority, done);
     this.todos.push(todo);
     this.todoCount += 1;
     return todo;
+  }
+
+  removeTodo(targetTodo) {
+    let updatedTodos = this.todos.filter(todo => todo !== targetTodo);
+    this.todos = updatedTodos;
+    this.todoCount -= 1;
   }
 }
 
