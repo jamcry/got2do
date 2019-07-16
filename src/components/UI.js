@@ -1,18 +1,46 @@
 import Project from "./Project";
 import Todo from "./Todo";
+import fetchFromLocalStorage from "./LocalStorageHelper";
 
 class UI {
   constructor() {
+    this.initDomElements();
+    this.addEventListeners();
+    this.bindFunctions();
+
+    this.currentProject = null;
+    this.currentProjectEl = {}
+
+    this.projectData = [];
+
+    this.checkLocalStorage();
+  }
+
+  initDomElements() {
     this.projects = document.querySelector(".projects");
     this.todos = document.querySelector(".todos");
     this.contentTitle = document.querySelector("#content-title");
-    this.currentProject = null;
-    this.currentProjectEl = {};
 
     this.todoForm = document.querySelector(".new-todo");
+    this.newTodoTitle = this.todoForm.querySelector("#todo-title");
+    this.newTodoDesc = this.todoForm.querySelector("#todo-description");
+    this.newTodoDue = this.todoForm.querySelector("#todo-due");
+    this.newTodoImportant = this.todoForm.querySelector("#todo-important");
+    
     this.todoTitleInput = document.querySelector("#todo-title");
     this.todoFormDetails = document.querySelector(".new-todo-details");
+    this.projectForm = document.querySelector('.new-project');
 
+  }
+
+  bindFunctions() {
+    this.handleProjectClick = this.handleProjectClick.bind(this);
+    this.handleTodoDelete = this.handleTodoDelete.bind(this);
+    this.handleTodoFormSubmit = this.handleTodoFormSubmit.bind(this);
+    this.handleTodoCheckboxChange = this.handleTodoCheckboxChange.bind(this);
+  }
+
+  addEventListeners() {
     // Expand the form when focused on it
     this.todoForm.addEventListener("focusin", e => {
       this.todoFormDetails.style.display = "block";
@@ -23,32 +51,14 @@ class UI {
       this.handleTodoFormSubmit(e);
     });
 
-    this.projectForm = document.querySelector('.new-project');
-    
     this.projectForm.addEventListener("submit", e => {
       this.handleProjectFormSubmit(e);
     });
-
-    this.handleProjectClick = this.handleProjectClick.bind(this);
-    this.handleTodoDelete = this.handleTodoDelete.bind(this);
-    this.handleTodoFormSubmit = this.handleTodoFormSubmit.bind(this);
-    this.handleTodoCheckboxChange = this.handleTodoCheckboxChange.bind(this);
-
-    this.projectData = [];
-    this.checkLocalStorage();
-
   }
 
   checkLocalStorage() {
-    const projectData = this.fetchFromLocalStorage('projectData');
+    const projectData = fetchFromLocalStorage('projectData');
     if(projectData) this.deserializeProjectData(projectData);
-  }
-
-  // Tetch and parse the localStorage item with given key, returns false otherwise
-  fetchFromLocalStorage(key) {
-    const data = localStorage.getItem(key);
-    if(data) return (JSON.parse(data));
-    else return false;
   }
 
   deserializeProjectData(projectData) {
@@ -74,12 +84,10 @@ class UI {
     this.projectData.push(project);
     localStorage.setItem('projectData', JSON.stringify(this.projectData));
 
-    this.render(project);
     return project;
   }
 
   // Creates and renders a new Todo
-  //!! SHOULDN'T BE USED! USE (Project).newTodo instead!
   createTodo(title, description, dueDate, priority) {
 
     // Find current project's index in the list
@@ -92,9 +100,6 @@ class UI {
     projectDataNew[currentProjectIndex] = this.currentProject;
     // Update localStorage
     localStorage.setItem('projectData', JSON.stringify(this.projectData));
-
-
-    this.render(todo);
     return todo;
   }
 
@@ -103,76 +108,107 @@ class UI {
   */
 
   /* Click handlers */
-
+  
   handleProjectClick(projectObj) {
+    this.renderProjectContent(projectObj)
+  }
+  
+  renderProjectContent(projectObj) {
     // Focus on todo form if project has no todos
     if(projectObj.todoCount === 0) this.todoTitleInput.focus();
+    this.setCurrentProject(projectObj);
+    
+    // Set the title
+    this.contentTitle.textContent = this.currentProject.title;
+
+    // TODO: Render buttons and hook event listeners
+    /** Set the title with buttons
+    /**
+    /** this.contentTitle.innerHTML = `
+    /** ${this.currentProject.title}
+    /** <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
+    /** <button class="action action-delete"><i class="fa fa-edit"></i></button>
+    /** `;    
+    **/
+
     // Clear the previously rendered todos
     this.todos.innerHTML = "";
-    this.currentProject = projectObj;
-    // Remove project-current class from previous selected project
-    if(this.currentProjectEl.classList) this.currentProjectEl.classList.remove('project-current');
-    // Set current project
-    this.currentProjectEl = projectObj.projectEl;
-    // Add project-current class to current project element
-    this.currentProjectEl.classList.add('project-current');
-    this.contentTitle.textContent = this.currentProject.title;
+    
+    // Render project's todos
     projectObj.todos.forEach(todo => this.render(todo));
   }
 
+  setCurrentProject(projectObj) {
+    // Remove project-current class from previous selected project
+    if(this.currentProjectEl.classList) this.currentProjectEl.classList.remove('project-current');
+    
+    // Change the state variables of current project
+    this.currentProject = projectObj;
+    this.currentProjectEl = projectObj.projectEl;
+    
+    // Add project-current class to current project element
+    this.currentProjectEl.classList.add('project-current');
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+
+  updateProjectData(newProjectData) {
+    this.projectData = newProjectData;
+    localStorage.setItem('projectData', JSON.stringify(newProjectData));
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+
   handleTodoDelete(todo) {
     if(confirm(`You are deleting the todo titled '${todo.title}'!`)) {
-        let currentProjectIndex = this.projectData.indexOf(this.currentProject);
-        let projectDataNew = [...this.projectData];
-        projectDataNew[currentProjectIndex].todos.filter(todo => todo !== todo);
+      let currentProjectIndex = this.projectData.indexOf(this.currentProject);
+      let projectDataNew = [...this.projectData];
+      projectDataNew[currentProjectIndex].todos.filter(todo => todo !== todo);
 
       this.currentProject.removeTodo(todo);
       this.todos.innerHTML = "";
       this.currentProject.todos.forEach(todo => this.render(todo));
-
-        this.projectData = projectDataNew;
-        // Update localStorage
-        localStorage.setItem('projectData', JSON.stringify(this.projectData));
+      this.updateProjectData(projectDataNew);
     }
   }
 
   handleTodoCheckboxChange(e, todoObj, todoEl) {
-
-        // Find current project's index in the list
-        let currentProjectIndex = this.projectData.indexOf(this.currentProject);
-        console.log(currentProjectIndex);
-        let currentTodoIndex = this.projectData[currentProjectIndex].todos.indexOf(todoObj);
-        // Copy the previous projectData
-        let projectDataNew = [...this.projectData];
-        
-      if(e.target.checked && !todoObj.done) {
-        todoObj.done = true;
-        todoEl.classList.add('todo-checked');
-      } else if(!e.target.checked && todoObj.done) {
-        todoObj.done = false;
-        todoEl.classList.remove('todo-checked');
-      }
+    // Find current project's index in the list
+    let currentProjectIndex = this.projectData.indexOf(this.currentProject);
+    let currentTodoIndex = this.projectData[currentProjectIndex].todos.indexOf(todoObj);
+    // Copy the previous projectData
+    let projectDataNew = [...this.projectData];
       
-        // Update prev state of currentProject with new one
-        projectDataNew[currentProjectIndex].todos[currentTodoIndex] = todoObj;
-        console.log(projectDataNew)
-        this.projectData = projectDataNew;
-        // Update localStorage
-        localStorage.setItem('projectData', JSON.stringify(this.projectData));
+    if(e.target.checked && !todoObj.done) {
+      todoObj.done = true;
+      todoEl.classList.add('todo-checked');
+    } else if(!e.target.checked && todoObj.done) {
+      todoObj.done = false;
+      todoEl.classList.remove('todo-checked');
+    }
+    
+    // Update prev state of currentProject with new one
+    projectDataNew[currentProjectIndex].todos[currentTodoIndex] = todoObj;
+    this.updateProjectData(projectDataNew);
+  }
+
+  getFormParams() {
+    const todoTitle = this.newTodoTitle.value;
+    const todoDesc = this.newTodoDesc.value;
+    const todoDue = this.newTodoDue.value;
+    const todoImportant = this.newTodoImportant.checked;
+    
+    return {todoTitle, todoDesc, todoDue, todoImportant}
   }
 
   /* Submit handlers */
   handleTodoFormSubmit(e) {
     e.preventDefault();
-    const todoForm = e.target;
-    const todoTitle = todoForm.querySelector("#todo-title").value;
-    const todoDesc = todoForm.querySelector("#todo-description").value;
-    const todoDue = todoForm.querySelector("#todo-due").value;
-    const todoImportant = todoForm.querySelector("#todo-important").checked;
+    let {todoTitle, todoDesc, todoDue, todoImportant} = this.getFormParams();
     const todoPriority = todoImportant ? "HIGH" : "NORMAL";
+    const todo = this.createTodo(todoTitle, todoDesc, todoDue, todoPriority);
     this.todoForm.reset();
-    this.createTodo(todoTitle, todoDesc, todoDue, todoPriority);
-
+    this.render(todo);
   }
 
   handleProjectFormSubmit(e) {
@@ -181,8 +217,8 @@ class UI {
     const projectTitle = projectForm.querySelector('#project-title').value;
     this.projectForm.reset();
     const project = this.createProject(projectTitle);
-    // Mock project click to render project page
-    this.handleProjectClick(project);
+    this.render(project);
+    this.renderProjectContent(project);
   }
 
   // Renders the given item
@@ -195,14 +231,6 @@ class UI {
       return false;
     }
   }
-
-  // Render project's todos
-  renderProject(project) {
-    if (project.todoCount > 0) {
-      project.todos.forEach(todo => this.render(todo));
-    }
-  }
-
 }
 
 export default UI;
