@@ -58,6 +58,7 @@ class UI {
 
   checkLocalStorage() {
     const projectData = fetchFromLocalStorage('projectData');
+    console.log(projectData);
     if(projectData) this.deserializeProjectData(projectData);
   }
 
@@ -81,7 +82,7 @@ class UI {
     const project = new Project(title);
 
     // Push new project to projectData list and update localstorage
-    const newProjectData = [...this.projectData].push(project);
+    let newProjectData = [...this.projectData, project];
     this.updateProjectData(newProjectData);
 
     return project;
@@ -89,7 +90,7 @@ class UI {
 
   // Creates and renders a new Todo
   createTodo(title, description, dueDate, priority) {
-
+    console.log(this.projectData);
     // Find current project's index in the list
     let currentProjectIndex = this.projectData.indexOf(this.currentProject);
     // Add new todo to current project object
