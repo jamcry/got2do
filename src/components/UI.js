@@ -81,8 +81,8 @@ class UI {
     const project = new Project(title);
 
     // Push new project to projectData list and update localstorage
-    this.projectData.push(project);
-    localStorage.setItem('projectData', JSON.stringify(this.projectData));
+    const newProjectData = [...this.projectData].push(project);
+    this.updateProjectData(newProjectData);
 
     return project;
   }
