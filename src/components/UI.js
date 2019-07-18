@@ -115,15 +115,17 @@ class UI {
   }
   
   renderProjectContent(projectObj) {
+    // Make todo form visible
+    this.todoForm.style.display = "block";
+
     // Focus on todo form if project has no todos
     if(projectObj.todoCount === 0) this.todoTitleInput.focus();
+
     this.setCurrentProject(projectObj);
     
     // Set the title
     this.contentTitle.textContent = this.currentProject.title;
 
-    // Make todo form visible
-    this.todoForm.style.display = "block";
     // TODO: Seperate delete logic
     
      this.contentTitle.innerHTML = `
