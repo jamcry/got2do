@@ -2,11 +2,16 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100vh;
+}
+
 body {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   font-family: 'Nunito', 'Roboto', 'Arial', sans-serif;
   background: #f5f5f5;
+  background-image: radial-gradient( circle farthest-corner at 12.3% 19.3%, rgba(85,88,218,1) 0%, rgba(95,209,249,1) 100.2% );
 }
 
 h1 {
@@ -39,9 +44,10 @@ h1 {
   box-sizing: border-box;
   vertical-align: top;
   background: #ddd;
-  border: 1px solid #888;
   border-radius: 5px;
   margin: 5px;
+  background: rgba(200,200,200,.5);
+  box-shadow: 0 0 15px #444;
 }
 
 .sidebar {
@@ -64,19 +70,25 @@ h1 {
   font-size: 1.4rem;
   border-bottom: 1px solid #999;
   background: #ccc;
+  background: rgba(50, 50, 250, .3);
   border-left: 0px solid gray;
+  border-left: 0px solid rgba(50, 50, 250, .7);
   transition: border-left-width .3s linear;
   border-left-width: 0px;
 }
 .project-current {
   border-left: 5px solid gray;
+  border-left: 5px solid rgba(50, 50, 250, .7);
+  background: rgba(50, 50, 250, .5);
 }
 
 .project:hover,
 input.project:focus {
   background: #bbb;
+  background: rgba(50, 50, 250, .5);
   cursor: pointer;
   border-left: solid gray;
+  border-left: solid rgba(50, 50, 250, .7);
   border-left-width: 5px;
   transition: border 0.3s linear;
 }
