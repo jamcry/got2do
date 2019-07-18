@@ -13,12 +13,14 @@ class UI {
 
     this.projectData = [];
 
+    this.renderDefaultContent();
     this.checkLocalStorage();
   }
 
   initDomElements() {
     this.projects = document.querySelector(".projects");
     this.todos = document.querySelector(".todos");
+    this.content = document.querySelector(".content");
     this.contentTitle = document.querySelector("#content-title");
 
     this.todoForm = document.querySelector(".new-todo");
@@ -58,7 +60,6 @@ class UI {
 
   checkLocalStorage() {
     const projectData = fetchFromLocalStorage('projectData');
-    console.log(projectData);
     if(projectData) this.deserializeProjectData(projectData);
   }
 
@@ -90,7 +91,6 @@ class UI {
 
   // Creates and renders a new Todo
   createTodo(title, description, dueDate, priority) {
-    console.log(this.projectData);
     // Find current project's index in the list
     let currentProjectIndex = this.projectData.indexOf(this.currentProject);
     // Add new todo to current project object
@@ -122,15 +122,18 @@ class UI {
     // Set the title
     this.contentTitle.textContent = this.currentProject.title;
 
-    // TODO: Render buttons and hook event listeners
-    /** Set the title with buttons
-    /**
-    /** this.contentTitle.innerHTML = `
-    /** ${this.currentProject.title}
-    /** <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
-    /** <button class="action action-delete"><i class="fa fa-edit"></i></button>
-    /** `;    
-    **/
+    // Make todo form visible
+    this.todoForm.style.display = "block";
+    // TODO: Seperate delete logic
+    
+     this.contentTitle.innerHTML = `
+      ${this.currentProject.title}
+      <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
+      <button class="action action-edit"><i class="fa fa-edit"></i></button>
+     `;    
+    
+     const btnDelete = this.contentTitle.querySelector('.del-project')
+     btnDelete.addEventListener('click', () => this.handleProjectDelete(this.currentProject));
 
     // Clear the previously rendered todos
     this.todos.innerHTML = "";
@@ -170,6 +173,19 @@ class UI {
       this.todos.innerHTML = "";
       this.currentProject.todos.forEach(todo => this.render(todo));
       this.updateProjectData(projectDataNew);
+    }
+  }
+
+  clearProjects() {
+    this.projects.innerHTML = "";
+  }
+
+  handleProjectDelete(project) {
+    if(confirm(`You are deleting the project titled '${project.title}' and its content!`)) {
+      this.updateProjectData(this.projectData.filter(item => item !== project));
+      this.clearProjects();
+      this.projectData.forEach(project => this.render(project));
+      this.renderDefaultContent();
     }
   }
 
@@ -232,6 +248,14 @@ class UI {
       return false;
     }
   }
+
+  // Renders the default placeholder content
+  renderDefaultContent() {
+    this.contentTitle.textContent = "You Got2Do Something";
+    this.todos.textContent = "Start by opening or creating a project.";
+    this.todoForm.style.display = "none";
+  }
+
 }
 
 export default UI;
