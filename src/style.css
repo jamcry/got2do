@@ -18,6 +18,10 @@ h1 {
   font-family: 'Montserrat', sans-serif;
 }
 
+button:focus {
+  outline: 0;
+}
+
 .container {
   box-sizing: border-box;
   margin: auto;
