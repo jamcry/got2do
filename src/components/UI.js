@@ -119,15 +119,12 @@ class UI {
   renderProjectContent(projectObj) {
     // Make todo form visible
     this.todoForm.style.display = "block";
-
     // Focus on todo form if project has no todos
     if(projectObj.todoCount === 0) this.todoTitleInput.focus();
-
     this.setCurrentProject(projectObj);
     
     // Set the title
     this.projectTitle.textContent = this.currentProject.title;
-
     // Render action buttons
     this.projectActions.innerHTML = `
       <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
@@ -142,7 +139,7 @@ class UI {
 
     // Clear the previously rendered todos
     this.todos.innerHTML = "";
-    
+
     // Render project's todos
     projectObj.todos.forEach(todo => this.render(todo));
   }
@@ -205,6 +202,14 @@ class UI {
 
     projectEditForm.addEventListener('submit', (e) => {
       // CHANGE TITLE UPDATE VIEW
+      const newTitle = projectTitleInput.value;
+      const currentProjectIndex = this.projectData.indexOf(this.currentProject);
+      this.projectData[currentProjectIndex].title = newTitle;
+      this.updateProjectData(this.projectData);
+      this.clearProjects();
+      this.projectData.forEach(project => this.render(project));
+      this.renderProjectContent(this.projectData[currentProjectIndex])
+      e.preventDefault();
     })
   }
 
