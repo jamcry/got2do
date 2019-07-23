@@ -44,6 +44,12 @@ button:focus {
   flex-grow: 9999;
   padding: .7rem;
 }
+.content h1 {
+  margin: 0;
+}
+.project-actions {
+  margin-bottom: 1rem;
+}
 .sidebar, .content {
   box-sizing: border-box;
   vertical-align: top;

@@ -21,7 +21,9 @@ class UI {
     this.projects = document.querySelector(".projects");
     this.todos = document.querySelector(".todos");
     this.content = document.querySelector(".content");
-    this.contentTitle = document.querySelector("#content-title");
+    this.projectHeader = document.querySelector(".project-header");
+    this.projectTitle = document.querySelector(".project-title");
+    this.projectActions = document.querySelector(".project-actions");
 
     this.todoForm = document.querySelector(".new-todo");
     this.newTodoTitle = this.todoForm.querySelector("#todo-title");
@@ -124,18 +126,19 @@ class UI {
     this.setCurrentProject(projectObj);
     
     // Set the title
-    this.contentTitle.textContent = this.currentProject.title;
+    this.projectTitle.textContent = this.currentProject.title;
 
-    // TODO: Seperate delete logic
-    
-     this.contentTitle.innerHTML = `
-      ${this.currentProject.title}
+    // Render action buttons
+    this.projectActions.innerHTML = `
       <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
-      <button class="action action-edit"><i class="fa fa-edit"></i></button>
-     `;    
+      <button class="action action-edit edit-project"><i class="fa fa-edit"></i></button>
+    `;    
     
-     const btnDelete = this.contentTitle.querySelector('.del-project')
-     btnDelete.addEventListener('click', () => this.handleProjectDelete(this.currentProject));
+    const btnDelete = this.projectHeader.querySelector('.del-project')
+    const btnEdit = this.projectHeader.querySelector('.edit-project')
+
+    btnDelete.addEventListener('click', () => this.handleProjectDelete(this.currentProject));
+    btnEdit.addEventListener('click', () => this.handleProjectEdit(this.currentProject));
 
     // Clear the previously rendered todos
     this.todos.innerHTML = "";
@@ -190,6 +193,21 @@ class UI {
       this.renderDefaultContent();
     }
   }
+
+  handleProjectEdit(project) {
+    this.projectTitle.innerHTML = `
+      <form class="project-title-form">
+        <input type="text" class="edited-title" value=${project.title}></input>
+      </form>
+    `
+    const projectEditForm = this.projectHeader.querySelector('.project-title-form');
+    const projectTitleInput = this.projectHeader.querySelector('.edited-title');
+
+    projectEditForm.addEventListener('submit', (e) => {
+      // CHANGE TITLE UPDATE VIEW
+    })
+  }
+
 
   handleTodoCheckboxChange(e, todoObj, todoEl) {
     // Find current project's index in the list
@@ -253,7 +271,7 @@ class UI {
 
   // Renders the default placeholder content
   renderDefaultContent() {
-    this.contentTitle.textContent = "You Got2Do Something";
+    this.projectTitle.textContent = "You Got2Do Something";
     this.todos.textContent = "Start by opening or creating a project.";
     this.todoForm.style.display = "none";
   }
