@@ -137,11 +137,8 @@ class UI {
     btnDelete.addEventListener('click', () => this.handleProjectDelete(this.currentProject));
     btnEdit.addEventListener('click', () => this.handleProjectEdit(this.currentProject));
 
-    // Clear the previously rendered todos
-    this.todos.innerHTML = "";
-
-    // Render project's todos
-    projectObj.todos.forEach(todo => this.render(todo));
+    // Render todos of the project
+    this.updateTodoListView(projectObj);
   }
 
   setCurrentProject(projectObj) {
@@ -172,22 +169,15 @@ class UI {
       projectDataNew[currentProjectIndex].todos.filter(todo => todo !== todo);
 
       this.currentProject.removeTodo(todo);
-      this.todos.innerHTML = "";
-      this.currentProject.todos.forEach(todo => this.render(todo));
+      this.updateTodoListView(this.currentProject);
       this.updateProjectData(projectDataNew);
     }
-  }
-
-  clearProjects() {
-    this.projects.innerHTML = "";
   }
 
   handleProjectDelete(project) {
     if(confirm(`You are deleting the project titled '${project.title}' and its content!`)) {
       this.updateProjectData(this.projectData.filter(item => item !== project));
-      this.clearProjects();
-      this.projectData.forEach(project => this.render(project));
-      this.renderDefaultContent();
+      this.updateProjectListView(this.projectData);
     }
   }
 
@@ -201,13 +191,12 @@ class UI {
     const projectTitleInput = this.projectHeader.querySelector('.edited-title');
 
     projectEditForm.addEventListener('submit', (e) => {
-      // CHANGE TITLE UPDATE VIEW
+      // Get the new title value
       const newTitle = projectTitleInput.value;
       const currentProjectIndex = this.projectData.indexOf(this.currentProject);
       this.projectData[currentProjectIndex].title = newTitle;
       this.updateProjectData(this.projectData);
-      this.clearProjects();
-      this.projectData.forEach(project => this.render(project));
+      this.updateProjectListView(this.projectData);
       this.renderProjectContent(this.projectData[currentProjectIndex])
       e.preventDefault();
     })
@@ -279,6 +268,28 @@ class UI {
     this.projectTitle.textContent = "You Got2Do Something";
     this.todos.textContent = "Start by opening or creating a project.";
     this.todoForm.style.display = "none";
+  }
+
+  // Renders the project's todos
+  renderTodoList(projectObj) {
+    projectObj.todos.forEach(todo => this.render(todo));
+  }
+
+  // Clears the given elements inner HTML
+  clearInnerHTML(element) {
+    element.innerHTML = "";
+  }
+
+  // Clears the project list and renders projects in given object
+  updateProjectListView(projectData) {
+    this.clearInnerHTML(this.projects);
+    this.projectData.forEach(project => this.render(project));
+  }
+
+  // Clears the todo list and renders projects todo
+  updateTodoListView(projectObj) {
+    this.clearInnerHTML(this.todos);
+    this.renderTodoList(projectObj);
   }
 
 }
