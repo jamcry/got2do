@@ -12,7 +12,6 @@ class Todo {
   appendTo(targetEl, deleteCallback = null, checkboxCallback = null) {
     const todo = document.createElement('div');
     todo.classList.add('todo');
-    console.log("THIS DONE!")
     todo.innerHTML = `
     
     <h1><input class="h1-checkbox check-done" type="checkbox"></input> ${this.title}</h1>

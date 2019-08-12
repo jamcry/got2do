@@ -125,6 +125,8 @@ class UI {
     
     // Set the title
     this.projectTitle.textContent = this.currentProject.title;
+    
+    // Make title editable on click
     this.projectTitle.addEventListener('click', () => this.handleProjectEdit(this.currentProject));
 
     // Render action buttons
@@ -206,12 +208,11 @@ class UI {
       getAndSetNewProjectTitle();
       e.preventDefault();
     });
-    
+
     projectEditForm.addEventListener('focusout', () => {
       getAndSetNewProjectTitle();
     });
   }
-
 
   handleTodoCheckboxChange(e, todoObj, todoEl) {
     // Find current project's index in the list
