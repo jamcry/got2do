@@ -125,6 +125,8 @@ class UI {
     
     // Set the title
     this.projectTitle.textContent = this.currentProject.title;
+    this.projectTitle.addEventListener('click', () => this.handleProjectEdit(this.currentProject));
+
     // Render action buttons
     this.projectActions.innerHTML = `
       <button class="action action-delete del-project"><i class="fa fa-trash"></i></button>
@@ -189,17 +191,25 @@ class UI {
     `
     const projectEditForm = this.projectHeader.querySelector('.project-title-form');
     const projectTitleInput = this.projectHeader.querySelector('.edited-title');
+    projectTitleInput.focus();
 
-    projectEditForm.addEventListener('submit', (e) => {
-      // Get the new title value
+    const getAndSetNewProjectTitle = () => {
       const newTitle = projectTitleInput.value;
       const currentProjectIndex = this.projectData.indexOf(this.currentProject);
       this.projectData[currentProjectIndex].title = newTitle;
       this.updateProjectData(this.projectData);
       this.updateProjectListView(this.projectData);
       this.renderProjectContent(this.projectData[currentProjectIndex])
+    }
+
+    projectEditForm.addEventListener('submit', (e) => {
+      getAndSetNewProjectTitle();
       e.preventDefault();
-    })
+    });
+    
+    projectEditForm.addEventListener('focusout', () => {
+      getAndSetNewProjectTitle();
+    });
   }
 
 
